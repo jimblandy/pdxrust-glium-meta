@@ -1,0 +1,48 @@
+* What do I want people to come away understanding?
+- 3D modern interactive rendering
+  - all triangles, lines, and points (tessellation req'd for anything else)
+  - transformations on vertices
+  - rasterization and interpolation
+  - z-buffering
+  - texture mapping
+  - programmable pipeline stages
+- How to hack together simple programs in glium
+  - mechanics: the right glium crate
+  - overall flow: event_loop, display, frame, draw
+- glium draw flow
+  - vertex buffer + index buffer = primitives
+  - vertex shader
+    - GL clip space
+  - fragment shader
+* Points to hit, somehow
+- set expectations:
+  - modern interactive 3D rendering:
+    - 3D: not vector graphics, SVG, web canvas, processing, cairo, skia (although, WebRender and Pathfinder)
+    - modern: hidden line removal, meh!
+    - interactive: GPUs, not ray-tracing (although...)
+  - not productivity: Unity, Unreal
+  - understand what's going on under the hood; like kernel hacking (BUT REALLY FUN)
+  - hack it yourself
+  - do something surprising
+- glium versus raw OpenGL: no state machine
+- diagram the GL pipeline - show amazing PDF first, then simplify
+- euclid
+- then the Julia set plotter (appeal of "buttery-smooth")
+- Vertices can be shared between primitives: use same vertex buffers for
+  triangles and their outlines
+- show flow, as a series laid out left to right, with inputs and outputs aligned
+  vertex buffers: attributes => vertex shader ins: outs => fragment ins => color
+* Points being deliberately left out
+- Reusing allocations: vertex buffers, index buffers
+- Minimizing traffic between CPU and GPU: reusing data previously transmitted
+- Nice vector arithmetic (operator overloading, AsRef, coordinate spaces)
+* Outline
+- show demo: "We're going to build this program."
+- set expectations ^^
+- 
+
+* References
+- [[https://thebookofshaders.com/][The Book of Shaders]]
+- [[https://everyweeks.com/entry/5814c12e6965033a77743f63][Logicoma Elysian teardown]]
+  - show off some of the tools they used - mention Bret Victor's Inventing on Principle
+- [[https://www.linuxtv.org/downloads/v4l-dvb-apis-new/uapi/v4l/v4l2.html][Video for Linux API]]
