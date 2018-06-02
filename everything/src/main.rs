@@ -9,6 +9,7 @@ use glium::index::PrimitiveType;
 use glium::glutin::{WindowEvent};
 
 use std::error::Error;
+use std::time::{Instant};
 
 fn scale(a: &[f32; 3], scale: f32) -> [f32; 3] {
     [ a[0] * scale, a[1] * scale, a[2] * scale ]
@@ -54,8 +55,20 @@ struct Triangle {
     /// The midpoint of the triangle's base (the side opposite the tip).
     base_midpt: [f32; 3],
 
-    /// Vector from base_midpt to the corner clockwise from the tip.
-    base_midpt_to_corner: [f32; 3]
+    /// Half the length of base - the distance from the base's midpoint to each
+    /// adjacent corner.
+    base_radius: f32,
+
+    /// Unit vector pointing from the midpoint of the base to the corner
+    /// clockwise from the tip, in the unrotated state.
+    base_unit_i: [f32; 3],
+
+    /// Unit normal to the triangle, pointing outwards from the front face,
+    /// in the unrotated state.
+    base_unit_j: [f32; 3],
+
+    /// Rotation about the axis from the tip to base_midpt, in radians.
+    spin: f32
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -69,8 +82,12 @@ impl Triangle {
     /// Return the positions of this triangle's three corners, with the triangle
     /// rotated about its axis by `spin` radians.
     fn corners(&self) -> [[f32; 3]; 3] {
-        let corner1 = add(&self.base_midpt, &self.base_midpt_to_corner);
-        let corner2 = subtract(&self.base_midpt, &self.base_midpt_to_corner);
+        let unit_towards_corner = mix_by_angle(&self.base_unit_i,
+                                               &self.base_unit_j,
+                                               self.spin);
+        let base_midpt_to_corner = scale(&unit_towards_corner, self.base_radius);
+        let corner1 = add(&self.base_midpt, &base_midpt_to_corner);
+        let corner2 = subtract(&self.base_midpt, &base_midpt_to_corner);
         // Viewed from the front, our vertices must appear in clockwise order.
         [self.tip, corner1, corner2]
     }
@@ -91,19 +108,31 @@ fn main() -> Result<(), Box<Error>> {
                              None)
         .expect("building program");
 
-    let triangle = Triangle {
+    let mut triangle = Triangle {
         tip: [ 0.5, 0.0, 0.0 ],
         base_midpt: [ 0.0, 0.0, -0.5 ],
-        base_midpt_to_corner: [ 0.0, -0.5, 0.0 ]
+        base_radius: 0.5,
+        base_unit_i: [ 0.0, -1.0, 0.0 ],
+        base_unit_j: [ -0.707, 0.0, 0.707 ],
+        spin: 0.0
     };
+
+    let start_time = Instant::now();
 
     let mut window_open = true;
     while window_open {
+        let frame_time = Instant::now() - start_time;
+
+        let seconds = frame_time.as_secs() as f32 +
+            (frame_time.subsec_nanos() as f32 * 1e-9);
+        let spin = seconds * 0.125 * 2.0 * std::f32::consts::PI;
+
         let mut frame = display.draw();
         frame.clear_color(1.0, 1.0, 1.0, 1.0);
 
         let mut vertices = Vec::new();
 
+        triangle.spin = spin;
         vertices.extend(triangle.corners().iter()
                         .map(|&position| Vertex { position }));
         assert_eq!(vertices.len(), 3);
