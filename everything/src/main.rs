@@ -7,6 +7,7 @@ use glium::index::PrimitiveType;
 use glium::glutin::{WindowEvent};
 
 use std::error::Error;
+use std::time::{Instant};
 
 fn scale(a: &[f32; 3], scale: f32) -> [f32; 3] {
     [ a[0] * scale, a[1] * scale, a[2] * scale ]
@@ -91,11 +92,19 @@ fn main() -> Result<(), Box<Error>> {
         normal: [ -0.5, 0.0, -0.5 ]
     };
 
+    let start_time = Instant::now();
+
     loop {
+        let frame_time = Instant::now() - start_time;
+
+        let seconds = frame_time.as_secs() as f32 +
+            (frame_time.subsec_nanos() as f32 * 1e-9);
+        let spin = seconds * 0.25 * 2.0 * std::f32::consts::PI;
+
         let mut frame = display.draw();
         frame.clear_color(0.0, 0.0, 1.0, 1.0);
 
-        let positions = triangle.corners(0.0);
+        let positions = triangle.corners(spin);
         let vertices: Vec<_> = positions.iter()
             .map(|&position| Vertex { position })
             .collect();
