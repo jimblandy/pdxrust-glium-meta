@@ -62,8 +62,11 @@
 - Beautiful placement and rotation of triangles
 * Outline
 - show demo: "We're going to build this program."
-- set expectations ^^
-- 
+- set expectations (see ^)
+* Talk
+![hand-plotted circle, hyperbola]
+
+So, I've loved graphics ever since my dad showed me the formula for a circle.
 
 * References
 - [[https://thebookofshaders.com/][The Book of Shaders]]
