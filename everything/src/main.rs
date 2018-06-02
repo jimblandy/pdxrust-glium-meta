@@ -13,12 +13,16 @@ fn scale(a: &[f32; 3], scale: f32) -> [f32; 3] {
     [ a[0] * scale, a[1] * scale, a[2] * scale ]
 }
 
+fn negate(a: &[f32; 3]) -> [f32; 3] {
+    scale(a, -1.0)
+}
+
 fn add(a: &[f32; 3], b: &[f32; 3]) -> [f32; 3] {
     [a[0] + b[0], a[1] + b[1], a[2] + b[2]]
 }
 
 fn subtract(a: &[f32; 3], b: &[f32; 3]) -> [f32; 3] {
-    add(a, &scale(b, -1.0))
+    add(a, &negate(b))
 }
 
 /// Return the point `angle` radians around the origin-centered ellipse whose
