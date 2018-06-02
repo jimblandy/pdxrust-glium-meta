@@ -4,6 +4,7 @@
 extern crate glium;
 
 use glium::{Program, Surface, VertexBuffer};
+use glium::draw_parameters::{BackfaceCullingMode, DrawParameters};
 use glium::glutin;
 use glium::index::PrimitiveType;
 use glium::glutin::{WindowEvent};
@@ -73,10 +74,11 @@ struct Triangle {
 
 #[derive(Clone, Copy, Debug)]
 struct Vertex {
-    position: [f32; 3]
+    position: [f32; 3],
+    normal: [f32; 3]
 }
 
-implement_vertex!(Vertex, position);
+implement_vertex!(Vertex, position, normal);
 
 impl Triangle {
     /// Return the positions of this triangle's three corners, with the triangle
@@ -90,6 +92,17 @@ impl Triangle {
         let corner2 = subtract(&self.base_midpt, &base_midpt_to_corner);
         // Viewed from the front, our vertices must appear in clockwise order.
         [self.tip, corner1, corner2]
+    }
+
+    fn backface_corners(&self) -> [[f32; 3]; 3] {
+        let [tip, corner1, corner2] = self.corners();
+        [tip, corner2, corner1]
+    }
+
+    /// Return a unit vector normal to the triangle's front surface.
+    fn normal(&self) -> [f32; 3] {
+        mix_by_angle(&self.base_unit_i, &self.base_unit_j,
+                     self.spin + std::f32::consts::FRAC_PI_2)
     }
 }
 
@@ -107,6 +120,11 @@ fn main() -> Result<(), Box<Error>> {
                              &include_str!("interior.frag"),
                              None)
         .expect("building program");
+    let triangle_interiors_draw_parameters =
+        DrawParameters {
+            backface_culling: BackfaceCullingMode::CullCounterClockwise,
+            .. Default::default()
+        };
 
     let mut triangle = Triangle {
         tip: [ 0.5, 0.0, 0.0 ],
@@ -128,19 +146,23 @@ fn main() -> Result<(), Box<Error>> {
         let spin = seconds * 0.125 * 2.0 * std::f32::consts::PI;
 
         let mut frame = display.draw();
-        frame.clear_color(1.0, 1.0, 1.0, 1.0);
+        frame.clear_color(0.8, 0.8, 0.8, 1.0);
 
         let mut vertices = Vec::new();
 
         triangle.spin = spin;
+        let normal = triangle.normal();
         vertices.extend(triangle.corners().iter()
-                        .map(|&position| Vertex { position }));
-        assert_eq!(vertices.len(), 3);
+                        .map(|&position| Vertex { position, normal }));
+        let backface_normal = negate(&normal);
+        vertices.extend(triangle.backface_corners().iter()
+                        .map(|&position| Vertex { position, normal: backface_normal }));
+        assert_eq!(vertices.len(), 6);
         let vertex_buffer = VertexBuffer::new(&display, &vertices)?;
 
         frame.draw(&vertex_buffer, &glium::index::NoIndices(PrimitiveType::TrianglesList),
                    &triangle_interiors_program,
-                   &uniform! {}, &Default::default())?;
+                   &uniform! {}, &triangle_interiors_draw_parameters)?;
         frame.finish()?;
 
         events_loop.poll_events(|event| {
