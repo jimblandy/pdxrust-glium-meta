@@ -3,11 +3,11 @@
 * Planning
 - [ ] Get complete program written, so that we know what we need to cover (8:00)
   - [X] [2:08:53] triangles (1:00)
-  - [ ] [0:00:00] illuminated (2:00)
-  - [ ] [0:00:00] with occlusion (1:30)
   - [X] [0:42:52] rotating over time (:30)
-  - [ ] [0:00:00] in perspective (1:00)
+  - [X] [4:13:06] illuminated (2:00)
   - [ ] [0:00:00] with borders (1:00)
+  - [ ] [0:00:00] with occlusion (1:30)
+  - [ ] [0:00:00] in perspective (1:00)
   - [ ] [0:00:00] textured (1:00)
 - If I had to give this talk in an hour, knowing only what I know now, and
   an assistant were making slides, what would I say? (:30)
@@ -19,3 +19,4 @@
 - draw diagrams in Inkscape, or scan hand drawings (4:00)
 - fix JSTools' flip.js, integrate with slide show software (4:00)
 
+- [0:20:02 1527974872] exporting example out into its own repo
