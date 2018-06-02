@@ -15,27 +15,51 @@
     - GL clip space
   - fragment shader
 * Points to hit, somehow
-- set expectations:
-  - modern interactive 3D rendering:
-    - 3D: not vector graphics, SVG, web canvas, processing, cairo, skia (although, WebRender and Pathfinder)
-    - modern: hidden line removal, meh!
-    - interactive: GPUs, not ray-tracing (although...)
-  - not productivity: Unity, Unreal
-  - understand what's going on under the hood; like kernel hacking (BUT REALLY FUN)
-  - hack it yourself
-  - do something surprising
-- glium versus raw OpenGL: no state machine
-- diagram the GL pipeline - show amazing PDF first, then simplify
-- euclid
-- then the Julia set plotter (appeal of "buttery-smooth")
-- Vertices can be shared between primitives: use same vertex buffers for
+- [ ] set expectations:
+  - [ ] modern interactive 3D rendering:
+    - [ ] 3D: not vector graphics, SVG, web canvas, processing, cairo, skia (although, WebRender and Pathfinder)
+    - [ ] modern: hidden line removal, meh!
+    - [ ] interactive: GPUs, not ray-tracing (although...)
+  - [ ] not productivity: Unity, Unreal
+  - [ ] understand what's going on under the hood; like kernel hacking (BUT REALLY FUN)
+  - [ ] hack it yourself
+  - [ ] do something surprising
+  - [ ] "Once you get a triangle, everything else is typing."
+- [ ] glium versus raw OpenGL: no state machine
+- [ ] diagram the GL pipeline - show amazing PDF first, then simplify
+- [ ] euclid
+- [ ] then the Julia set plotter (appeal of "buttery-smooth")
+- [ ] Vertices can be shared between primitives: use same vertex buffers for
   triangles and their outlines
-- show flow, as a series laid out left to right, with inputs and outputs aligned
+- [ ] show flow, as a series laid out left to right, with inputs and outputs aligned
   vertex buffers: attributes => vertex shader ins: outs => fragment ins => color
+- [ ] whirlwind linear algebra concepts (show picture and corresponding math)
+  - [ ] vector
+    - [ ] unit vector
+  - [ ] vector addition
+  - [ ] scaling a vector by a number
+    - [ ] includes reversing
+    - [ ] and from that follows subtraction
+    - [ ] "normalizing" a vector returns a unit vector
+      (beware of zero-length vectors!)
+  - [ ] you can look at the x and y of a point as the scaling factors applied to
+    special unit vectors î and ĵ
+  - [ ] example: points around a circle
+  - [ ] dot product
+    - [ ] simple formula, surprising properties
+    - [ ] perpendicular vectors always have a dot product of zero
+    - [ ] dot product is maximized when vectors are parallel (and is simply the
+      product of their lengths)
+    - [ ] vectors pointing away from each other have a negative dot product (and is
+      maximally negative when they're pointing in opposite directions)
+  - [ ] "normal" vs. normalized
+- [ ] Details of our triangle model
 * Points being deliberately left out
+- Abstractions, in general
 - Reusing allocations: vertex buffers, index buffers
 - Minimizing traffic between CPU and GPU: reusing data previously transmitted
 - Nice vector arithmetic (operator overloading, AsRef, coordinate spaces)
+- Beautiful placement and rotation of triangles
 * Outline
 - show demo: "We're going to build this program."
 - set expectations ^^
@@ -46,3 +70,5 @@
 - [[https://everyweeks.com/entry/5814c12e6965033a77743f63][Logicoma Elysian teardown]]
   - show off some of the tools they used - mention Bret Victor's Inventing on Principle
 - [[https://www.linuxtv.org/downloads/v4l-dvb-apis-new/uapi/v4l/v4l2.html][Video for Linux API]]
+- [[https://www.youtube.com/watch?v=kjBOesZCoqc&list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab][Essence of Linear Algebra]]
+
